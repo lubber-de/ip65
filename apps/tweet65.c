@@ -17,26 +17,7 @@ char text[280 + 1];
 
 void error_exit(void)
 {
-  switch (ip65_error)
-  {
-  case IP65_ERROR_DEVICE_FAILURE:
-    printf("- No device found\n");
-    break;
-  case IP65_ERROR_ABORTED_BY_USER:
-    printf("- User abort\n");
-    break;
-  case IP65_ERROR_TIMEOUT_ON_RECEIVE:
-    printf("- Timeout\n");
-    break;
-  case IP65_ERROR_MALFORMED_URL:
-    printf("- Malformed URL\n");
-    break;
-  case IP65_ERROR_DNS_LOOKUP_FAILED:
-    printf("- Lookup failed\n");
-    break;
-  default:
-    printf("- Error $%X\n", ip65_error);
-  }
+  printf("- %s\n", ip65_strerror(ip65_error));
   exit(EXIT_FAILURE);
 }
 
@@ -111,7 +92,7 @@ void input(char* str, unsigned int max, const char* tag)
   }
 }
 
-void main()
+int main(void)
 {
   int retval;
   uint8_t eth_init = ETH_INIT_DEFAULT;
@@ -139,7 +120,7 @@ void main()
       if (*key == '\0')
       {
         printf("\n");
-        return;
+        return EXIT_FAILURE;
       }
 
       printf("\n\nSaving key ");
@@ -194,7 +175,7 @@ void main()
   if (*text == '\0')
   {
     printf("\n");
-    return;
+    return EXIT_FAILURE;
   }
 
   printf("\n\nSending tweet ");
@@ -210,4 +191,5 @@ void main()
     exit(EXIT_FAILURE);
   }
   printf("- Ok\n");
+  return EXIT_SUCCESS;
 }
